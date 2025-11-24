@@ -6,13 +6,12 @@
 
 ---
 ## 🎯 Visão Geral
+Este projeto implementa um **Agente de IA Web** que permite traduzir automaticamente entre:
 
-Este projeto implementa um *Agente de IA Web* capaz de traduzir automaticamente entre:
+- **NL → CPC**: Linguagem Natural (Português) → Fórmulas Lógicas (Cálculo Proposicional Clássico)  
+- **CPC → NL**: Fórmulas Lógicas → Linguagem Natural (Português)  
 
-1. *NL → CPC*: Linguagem Natural em Português → Fórmulas Lógicas
-2. *CPC → NL*: Fórmulas Lógicas → Linguagem Natural em Português
-
-O sistema reconhece conectivos lógicos, estrutura proposições atômicas e gera mapeamentos automáticos entre variáveis proposicionais e seus significados.
+O sistema reconhece conectivos lógicos, identifica proposições atômicas, gera mapeamentos automáticos de variáveis (P, Q, R...) e permite customização pelo usuário. A interface é interativa, responsiva e intuitiva.ignificados.
 
 ---
 

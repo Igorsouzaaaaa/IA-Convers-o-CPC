@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Conversor NL ↔ CPC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    margin: 0;
+    background: #0e0e0e;
+    font-family: "Segoe UI", sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.hidden { display: none; }
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(14px);
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 0 40px rgba(255,255,255,0.05);
+    animation: fadeIn .6s ease;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+h1 {
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 1px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .25s;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.4);
+}
+button:hover {
+    transform: scale(1.03);
+    background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+}
+
+.card{
+    background: rgba(255,255,255,0.05);
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 30px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+}
+
+textarea, input {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    outline: none;
+    margin-top: 10px;
+}
+
+.mapa {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+.mapa-item {
+    background: rgba(255,255,255,0.06);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    font-size: 15px;
+}
+.mapa-item b {
+    font-size: 22px;
+}
+
+.menu-btn {
+    width: 100%;
+    margin-top:20px;
+    padding:18px;
+    text-align:center;
+    border-radius:12px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    cursor:pointer;
+    transition:.25s;
+}
+.menu-btn:hover{
+    transform:scale(1.03);
+}
+
+.user-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    cursor: pointer;
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity:0; transform: translateY(10px); }
+    to { opacity:1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+
+<div class="container hidden" id="loginTela">
+    <img src="data:image/svg+xml;utf8,<svg fill='white' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><circle cx='32' cy='20' r='12'/><path d='M8,60c0-13.255,10.745-24,24-24s24,10.745,24,24H8z'/></svg>" class="user-icon" onclick="showCadastro()">
+    <h1>Entrar</h1>
+    <div class="card">
+        <input id="loginEmail" placeholder="E-mail">
+        <input id="loginSenha" type="password" placeholder="Senha">
+        <button onclick="logar()">Entrar</button>
+        <p style="text-align:center;margin-top:10px;">
+            Não tem conta? <a href="#" onclick="showCadastro()" style="color:#4bc3ff;">Cadastrar</a>
+        </p>
+    </div>
+</div>
+
+
+<div class="container hidden" id="cadastroTela">
+    <img src="data:image/svg+xml;utf8,<svg fill='white' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><circle cx='32' cy='20' r='12'/><path d='M8,60c0-13.255,10.745-24,24-24s24,10.745,24,24H8z'/></svg>" class="user-icon" onclick="showLogin()">
+    <h1>Criar Conta</h1>
+    <div class="card">
+        <input id="cadEmail" placeholder="E-mail">
+        <input id="cadSenha" type="password" placeholder="Senha">
+        <button onclick="cadastrar()">Cadastrar</button>
+        <p style="text-align:center;margin-top:10px;">
+            Já tem conta? <a href="#" onclick="showLogin()" style="color:#4bc3ff;">Entrar</a>
+        </p>
+    </div>
+</div>
+
+
+<div class="container hidden" id="dashboard">
+    <h1>Conversor NL ↔ CPC</h1>
+    <div class="card">
+        <div class="menu-btn" onclick="mostrarModulo('modNL')"> NL → CPC</div>
+        <div class="menu-btn" onclick="mostrarModulo('modCPC')"> CPC → NL</div>
+        <div class="menu-btn" onclick="mostrarModulo('modTut')"> Tutorial</div>
+        <div class="menu-btn" onclick="logout()"> Sair</div>
+    </div>
+</div>
+
+
+<div class="container hidden" id="modNL">
+    <h1>NL → CPC</h1>
+    <button onclick="voltarMenu()">← Voltar</button>
+    <div class="card">
+        <label>Digite uma frase:</label>
+        <textarea id="inputNL" rows="3" oninput="converterNL()"></textarea>
+        <h3>Fórmula:</h3>
+        <div id="saidaCPC" style="font-size:22px;font-weight:bold;"></div>
+        <h3>Mapa:</h3>
+        <div id="mapaNL" class="mapa"></div>
+    </div>
+</div>
+
+<!-- CPC → NL -->
+<div class="container hidden" id="modCPC">
+    <h1>CPC → NL</h1>
+    <button onclick="voltarMenu()">← Voltar</button>
+    <div class="card">
+        <label>Digite a fórmula lógica:</label>
+        <textarea id="inputCPC" rows="3" oninput="converterCPC()"></textarea>
+        <h3>Frase:</h3>
+        <div id="saidaNL" style="font-size:22px;font-weight:bold;"></div>
+    </div>
+</div>
+
+
+<div class="container hidden" id="modTut">
+    <h1>Tutorial</h1>
+    <button onclick="voltarMenu()">← Voltar</button>
+    <div class="card">
+        <p>• NL → CPC converte frases para lógica proposicional (P, Q, R).</p>
+        <p>• CPC → NL reverte uma fórmula para português.</p>
+        <p>• O site usa um sistema de mapeamento automático de proposições.</p>
+        <p>• Suporta E (∧), OU (∨), SE ENTÃO (→), SE E SOMENTE SE (↔), e parênteses apenas quando necessário.</p>
+    </div>
+</div>
+
+<script>
+function get(id){ return document.getElementById(id); }
+
+function hideAll(){
+    ["loginTela","cadastroTela","dashboard","modNL","modCPC","modTut"]
+        .forEach(id => get(id).classList.add("hidden"));
+}
+
+function showLogin(){ hideAll(); get("loginTela").classList.remove("hidden"); }
+function showCadastro(){ hideAll(); get("cadastroTela").classList.remove("hidden"); }
+function voltarMenu(){ hideAll(); get("dashboard").classList.remove("hidden"); }
+function mostrarModulo(id){ hideAll(); get(id).classList.remove("hidden"); }
+
+
+function cadastrar(){
+    let e = get("cadEmail").value.trim();
+    let s = get("cadSenha").value.trim();
+    if(e) localStorage.setItem("email", e);
+    if(s) localStorage.setItem("senha", s);
+    localStorage.setItem("logado", "true");
+    alert("Conta criada!");
+    hideAll(); get("dashboard").classList.remove("hidden");
+}
+
+function logar(){
+    let e = get("loginEmail").value.trim();
+    let s = get("loginSenha").value.trim();
+    if((!localStorage.getItem("email") || e===localStorage.getItem("email")) &&
+       (!localStorage.getItem("senha") || s===localStorage.getItem("senha"))){
+        localStorage.setItem("logado","true");
+        hideAll(); get("dashboard").classList.remove("hidden");
+    } else alert("Credenciais incorretas.");
+}
+
+function logout(){
+    localStorage.removeItem("logado");
+    showLogin();
+}
+
+
+function converterNL(){
+    let frase = get("inputNL").value.trim();
+    if(!frase) { get("saidaCPC").innerHTML=""; get("mapaNL").innerHTML=""; return; }
+
+    let letras = ["P","Q","R"];
+    let mapa = {};
+    let proposicoes = frase.split(/,| e | ou | se e somente se | se | então /).map(s=>s.trim()).filter(s=>s);
+    proposicoes.forEach((p,i)=> mapa[letras[i%3]] = p);
+
+    let formulaCPC = frase.toLowerCase();
+    formulaCPC = formulaCPC.replace(/ se e somente se /g,"↔")
+                             .replace(/ então /g,"→")
+                             .replace(/ e /g,"∧")
+                             .replace(/ ou /g,"∨");
+
+    Object.entries(mapa).forEach(([L,txt])=>{
+        let re = new RegExp(txt,"gi");
+        formulaCPC = formulaCPC.replace(re,L);
+    });
+
+
+    formulaCPC = formulaCPC.replace(/([PQR](?: ∧ [PQR]){1,})/g,"($1)")
+                             .replace(/([PQR](?: ∨ [PQR]){1,})/g,"($1)");
+
+    formulaCPC = formulaCPC.replace(/∧/g," ∧ ")
+                             .replace(/∨/g," ∨ ")
+                             .replace(/→/g," → ")
+                             .replace(/↔/g," ↔ ");
+
+    get("saidaCPC").innerHTML = formulaCPC;
+
+    let div = get("mapaNL");
+    div.innerHTML = "";
+    Object.entries(mapa).forEach(([L,txt])=>{
+        div.innerHTML += `<div class="mapa-item"><b>${L}</b> ${txt}</div>`;
+    });
+}
+
+function converterCPC(){
+    let formula = get("inputCPC").value.trim();
+    if(!formula){ get("saidaNL").innerHTML=""; return; }
+
+    formula = formula.replace(/\s+/g,"");
+    let letras = formula.replace(/[^PQR]/g,"").split("");
+    letras = [...new Set(letras)];
+    let mapa = {};
+    letras.forEach(l=> mapa[l] = `a proposição ${l}`);
+
+    let frase = formula.replace(/\∧/g," e ")
+                       .replace(/\∨/g," ou ")
+                       .replace(/\¬/g,"não ")
+                       .replace(/\→/g," implica ")
+                       .replace(/\↔/g," se e somente se ");
+
+    letras.forEach(L=>{
+        let re = new RegExp(L,"g");
+        frase = frase.replace(re,mapa[L]);
+    });
+
+    get("saidaNL").innerHTML = frase;
+}
+
+
+window.onload = function(){
+    if(localStorage.getItem("logado") === "true"){
+        hideAll(); get("dashboard").classList.remove("hidden");
+    } else {
+        showLogin();
+    }
+
+    get("inputNL").value = "";
+    get("inputCPC").value = "";
+    get("saidaCPC").innerHTML = "";
+    get("saidaNL").innerHTML = "";
+    get("mapaNL").innerHTML = "";
+}
+</script>
+
+</body>
+</html>
